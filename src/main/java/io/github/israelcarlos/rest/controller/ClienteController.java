@@ -2,6 +2,7 @@ package io.github.israelcarlos.rest.controller;
 
 import io.github.israelcarlos.domain.entity.Cliente;
 import io.github.israelcarlos.domain.repository.Clientes;
+import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
@@ -9,18 +10,25 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.net.ssl.HttpsURLConnection;
 import javax.validation.Valid;
 import java.util.List;
 
 @RestController
 @RequestMapping("api/clientes")
+@Api("API Clientes")
 public class ClienteController {
 
     @Autowired
     private Clientes clientes;
 
     @GetMapping("/{id}")
-    public Cliente getClienteById(@PathVariable("id") Integer id) {
+    @ApiOperation("Obter detalhes de um cliente")
+    @ApiResponses({
+            @ApiResponse(code = 200, message="Cliente encontrado"),
+            @ApiResponse(code = 404, message="Cliente não encontrado para o Id informado")
+    })
+    public Cliente getClienteById(@ApiParam("Id do cliente") @PathVariable Integer id) {
         return clientes
                 .findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente não encontrado"));
@@ -28,6 +36,11 @@ public class ClienteController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @ApiOperation("Salva um novo cliente")
+    @ApiResponses({
+            @ApiResponse(code = 201, message="Cliente salvo com sucesso"),
+            @ApiResponse(code = 400, message="Erro de validação")
+    })
     public Cliente save(@RequestBody @Valid Cliente cliente) {
         return clientes.save(cliente);
     }
