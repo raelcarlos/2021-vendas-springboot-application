@@ -16,20 +16,6 @@ import java.math.BigDecimal;
 @SpringBootApplication
 public class VendasApplication {
 
-    @Bean
-    public CommandLineRunner commandLineRunner(@Autowired Clientes clientes, @Autowired Produtos produtos) {
-        return args -> {
-            Cliente c = new Cliente("João", "07374924909");
-            clientes.save(c);
-
-            Produto p = new Produto(null, "Cadeira", BigDecimal.valueOf(100));
-            produtos.save(p);
-
-            p = new Produto(null, "Mesa", BigDecimal.valueOf(500));
-            produtos.save(p);
-        };
-    }
-
     public static void main(String[] args) {
         SpringApplication.run(VendasApplication.class, args);
     }
